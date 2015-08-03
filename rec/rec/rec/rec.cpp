@@ -9,7 +9,7 @@
 #include "my_i2c_watch.h"
 #include "KS0107.h"
 
-#define BUT_1 ((PINB>>7)&1)//кнопка 1
+#define BUT_1 ((PINB>>7)&1)// кнопка 1
 #define BUT_2 ((PINB>>6)&1)// кнопка 2
 
 //unsigned char rec_data[5][3]={0};//принятые данные 5 шт по 1,5 байта
