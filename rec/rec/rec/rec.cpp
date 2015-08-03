@@ -1,4 +1,4 @@
-#define F_CPU 1000000UL
+п»ї#define F_CPU 1000000UL
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
@@ -9,18 +9,18 @@
 #include "my_i2c_watch.h"
 #include "KS0107.h"
 
-#define BUT_1 ((PINB>>7)&1)//кнопка 1
-#define BUT_2 ((PINB>>6)&1)// кнопка 2
+#define BUT_1 ((PINB>>7)&1)//РєРЅРѕРїРєР° 1
+#define BUT_2 ((PINB>>6)&1)// РєРЅРѕРїРєР° 2
 
-//unsigned char rec_data[5][3]={0};//принятые данные 5 шт по 1,5 байта
-//unsigned int T[3]={0,0,0};// три измеряемые температуры
-unsigned char rec_byte=0;//принятый не раскодированый байт
-unsigned char screen_st=0;//что на экране 0-температура; 1-время ;
-unsigned char mode=0;//экран - часы - температура внутри - температура снаружи...
-unsigned char cond_1=0;// состояние кнопки 1
-unsigned char cond_2=0;// состояние кнопки 2
-unsigned char setmode=0;// режим настройки 1; обычный режим 2;
-unsigned char set=0;// выбор что настраивать 1- секунды; 2-минуты;3-часы
+//unsigned char rec_data[5][3]={0};//РїСЂРёРЅСЏС‚С‹Рµ РґР°РЅРЅС‹Рµ 5 С€С‚ РїРѕ 1,5 Р±Р°Р№С‚Р°
+//unsigned int T[3]={0,0,0};// С‚СЂРё РёР·РјРµСЂСЏРµРјС‹Рµ С‚РµРјРїРµСЂР°С‚СѓСЂС‹
+unsigned char rec_byte=0;//РїСЂРёРЅСЏС‚С‹Р№ РЅРµ СЂР°СЃРєРѕРґРёСЂРѕРІР°РЅС‹Р№ Р±Р°Р№С‚
+unsigned char screen_st=0;//С‡С‚Рѕ РЅР° СЌРєСЂР°РЅРµ 0-С‚РµРјРїРµСЂР°С‚СѓСЂР°; 1-РІСЂРµРјСЏ ;
+unsigned char mode=0;//СЌРєСЂР°РЅ - С‡Р°СЃС‹ - С‚РµРјРїРµСЂР°С‚СѓСЂР° РІРЅСѓС‚СЂРё - С‚РµРјРїРµСЂР°С‚СѓСЂР° СЃРЅР°СЂСѓР¶Рё...
+unsigned char cond_1=0;// СЃРѕСЃС‚РѕСЏРЅРёРµ РєРЅРѕРїРєРё 1
+unsigned char cond_2=0;// СЃРѕСЃС‚РѕСЏРЅРёРµ РєРЅРѕРїРєРё 2
+unsigned char setmode=0;// СЂРµР¶РёРј РЅР°СЃС‚СЂРѕР№РєРё 1; РѕР±С‹С‡РЅС‹Р№ СЂРµР¶РёРј 2;
+unsigned char set=0;// РІС‹Р±РѕСЂ С‡С‚Рѕ РЅР°СЃС‚СЂР°РёРІР°С‚СЊ 1- СЃРµРєСѓРЅРґС‹; 2-РјРёРЅСѓС‚С‹;3-С‡Р°СЃС‹
 
 unsigned char rec_data0_0=0,rec_data0_1=0,rec_data0_2=0;
 unsigned char rec_data1_0=0,rec_data1_1=0,rec_data1_2=0;
@@ -133,17 +133,17 @@ if(mode>40)mode=0;
 TCNT1=0xffff-500;
 }
 void noraml_mode(void){
-if (mode<=8){read_ds_data(&ds_time);convert(&ds_time);show_time();}//экран часов
-if ((mode>8)&(mode<16)){T_internal=temp_18b20();show_temp(0,T_internal);}//экран температуры внутри
-if ((mode>16)&(mode<24)){show_temp(1,T_external);}//экран температуры снаружи
-if ((mode>24)&(mode<32)){show_temp(0,T_kitchen);}//экран кухни
-if ((mode>32)&(mode<40)){show_temp(1,T_bathroom);}//экран ванной
+if (mode<=8){read_ds_data(&ds_time);convert(&ds_time);show_time();}//СЌРєСЂР°РЅ С‡Р°СЃРѕРІ
+if ((mode>8)&(mode<16)){T_internal=temp_18b20();show_temp(0,T_internal);}//СЌРєСЂР°РЅ С‚РµРјРїРµСЂР°С‚СѓСЂС‹ РІРЅСѓС‚СЂРё
+if ((mode>16)&(mode<24)){show_temp(1,T_external);}//СЌРєСЂР°РЅ С‚РµРјРїРµСЂР°С‚СѓСЂС‹ СЃРЅР°СЂСѓР¶Рё
+if ((mode>24)&(mode<32)){show_temp(0,T_kitchen);}//СЌРєСЂР°РЅ РєСѓС…РЅРё
+if ((mode>32)&(mode<40)){show_temp(1,T_bathroom);}//СЌРєСЂР°РЅ РІР°РЅРЅРѕР№
 }
 void set_mode(void){
 cli();
-if(BUT_2==0){if(cond_2==1){cond_2=0;set++;}}//смена места подстройки с>м>ч
+if(BUT_2==0){if(cond_2==1){cond_2=0;set++;}}//СЃРјРµРЅР° РјРµСЃС‚Р° РїРѕРґСЃС‚СЂРѕР№РєРё СЃ>Рј>С‡
 
-//настройка необходимого параметра
+//РЅР°СЃС‚СЂРѕР№РєР° РЅРµРѕР±С…РѕРґРёРјРѕРіРѕ РїР°СЂР°РјРµС‚СЂР°
 if (BUT_1==0){if(cond_1==1){
 	cond_1==0;
 	switch(set)
@@ -164,7 +164,7 @@ ds_time.hour++;
 	break;
 	}	}	}
 	
-	switch(set){//эффект мерцания =
+	switch(set){//СЌС„С„РµРєС‚ РјРµСЂС†Р°РЅРёСЏ =
 	case 0:
 	clear_sector(53,0,20,16);
 	break;
@@ -177,15 +177,15 @@ ds_time.hour++;
 	clear_sector(0,0,54,64);
 	break;
 	}
-	show_time();//отображение текущих настроек времени
+	show_time();//РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ С‚РµРєСѓС‰РёС… РЅР°СЃС‚СЂРѕРµРє РІСЂРµРјРµРЅРё
 	if (set>=3){
-	cond_2=0;//кнопка 2 была нажата
-	setmode=0;// переход в нормальный режим
-	set=0;//при входе в режим настроек начинать с секунд
-	mode=0;// переход в нормальный режим на экран отображения часов
-	ds_write(0,for_ds(ds_time.second));//запись измененных данных с 
-	ds_write(1,for_ds(ds_time.minutes));//запись измененных данных м
-	ds_write(2,for_ds(ds_time.hour));//запись измененных данных ч
+	cond_2=0;//РєРЅРѕРїРєР° 2 Р±С‹Р»Р° РЅР°Р¶Р°С‚Р°
+	setmode=0;// РїРµСЂРµС…РѕРґ РІ РЅРѕСЂРјР°Р»СЊРЅС‹Р№ СЂРµР¶РёРј
+	set=0;//РїСЂРё РІС…РѕРґРµ РІ СЂРµР¶РёРј РЅР°СЃС‚СЂРѕРµРє РЅР°С‡РёРЅР°С‚СЊ СЃ СЃРµРєСѓРЅРґ
+	mode=0;// РїРµСЂРµС…РѕРґ РІ РЅРѕСЂРјР°Р»СЊРЅС‹Р№ СЂРµР¶РёРј РЅР° СЌРєСЂР°РЅ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ С‡Р°СЃРѕРІ
+	ds_write(0,for_ds(ds_time.second));//Р·Р°РїРёСЃСЊ РёР·РјРµРЅРµРЅРЅС‹С… РґР°РЅРЅС‹С… СЃ 
+	ds_write(1,for_ds(ds_time.minutes));//Р·Р°РїРёСЃСЊ РёР·РјРµРЅРµРЅРЅС‹С… РґР°РЅРЅС‹С… Рј
+	ds_write(2,for_ds(ds_time.hour));//Р·Р°РїРёСЃСЊ РёР·РјРµРЅРµРЅРЅС‹С… РґР°РЅРЅС‹С… С‡
 	sei();}
 }
 
@@ -193,28 +193,28 @@ ds_time.hour++;
 int main(void)
 {
 	
-	button_init();//инициализация кнопок
+	button_init();//РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РєРЅРѕРїРѕРє
 	ds_init();//
 	KS0107_Init();
 	KS0107_Clrscr(0);
 	SPI_MasterInit();
 	nRF24L01_init(0b00000011);
 	nrf24l01_RX_TX_mode(PRX);
-	timer_init();//настройка таймера
+	timer_init();//РЅР°СЃС‚СЂРѕР№РєР° С‚Р°Р№РјРµСЂР°
 	if((BUT_1&BUT_2)==0){ds_write(0,0);ds_write(1,0);ds_write(2,0);cond_1=0;cond_2=0;}//full reset 00:00:00
 	sei();
 	
 while(1){
 
-if(BUT_1==1){cond_1=1;}//условие ненажатости
-if(BUT_2==1){cond_2=1;}//условие ненажатости	
+if(BUT_1==1){cond_1=1;}//СѓСЃР»РѕРІРёРµ РЅРµРЅР°Р¶Р°С‚РѕСЃС‚Рё
+if(BUT_2==1){cond_2=1;}//СѓСЃР»РѕРІРёРµ РЅРµРЅР°Р¶Р°С‚РѕСЃС‚Рё	
 		    
-if (setmode==0){	//обычный режим
-if(BUT_1==0){if(cond_1==1){cond_1=0;mode=26;}}	//показ температуры пола
-if(BUT_2==0){if(cond_2==1){cond_2=0;mode=100;setmode=1;read_ds_data(&ds_time);convert(&ds_time);}}// переход в режим настройки setmode=1
+if (setmode==0){	//РѕР±С‹С‡РЅС‹Р№ СЂРµР¶РёРј
+if(BUT_1==0){if(cond_1==1){cond_1=0;mode=26;}}	//РїРѕРєР°Р· С‚РµРјРїРµСЂР°С‚СѓСЂС‹ РїРѕР»Р°
+if(BUT_2==0){if(cond_2==1){cond_2=0;mode=100;setmode=1;read_ds_data(&ds_time);convert(&ds_time);}}// РїРµСЂРµС…РѕРґ РІ СЂРµР¶РёРј РЅР°СЃС‚СЂРѕР№РєРё setmode=1
 noraml_mode();
 }  //end if (setmode==0) 
-else if(setmode==1){//режим настройки часов
+else if(setmode==1){//СЂРµР¶РёРј РЅР°СЃС‚СЂРѕР№РєРё С‡Р°СЃРѕРІ
 set_mode();
 	}//end if(setmode==1)
 	}//end while(1)
