@@ -1,14 +1,14 @@
 #include <avr/io.h>
 #include <avr/delay.h>
 
-#define SDA   0  //Пины шины I2C
-#define SCL   1  //Пины шины I2C
-#define PORT PORTB  //Порт шины I2C
-#define DDR DDRB	//Порт шины I2C
-#define PIN PINB	//Порт шины I2C
-#define DS1307_ADDR  0b01101000 //адрес микросхемы DS1307
-#define DS1307_ADDR_R  (DS1307_ADDR<<1)|1 //адрес микросхемы DS1307 + бит чтения
-#define DS1307_ADDR_W   DS1307_ADDR<<1  //адрес микросхемы DS1307 + бит записи
+#define SDA   0  //РџРёРЅС‹ С€РёРЅС‹ I2C
+#define SCL   1  //РџРёРЅС‹ С€РёРЅС‹ I2C
+#define PORT PORTB  //РџРѕСЂС‚ С€РёРЅС‹ I2C
+#define DDR DDRB	//РџРѕСЂС‚ С€РёРЅС‹ I2C
+#define PIN PINB	//РџРѕСЂС‚ С€РёРЅС‹ I2C
+#define DS1307_ADDR  0b01101000 //Р°РґСЂРµСЃ РјРёРєСЂРѕСЃС…РµРјС‹ DS1307
+#define DS1307_ADDR_R  (DS1307_ADDR<<1)|1 //Р°РґСЂРµСЃ РјРёРєСЂРѕСЃС…РµРјС‹ DS1307 + Р±РёС‚ С‡С‚РµРЅРёСЏ
+#define DS1307_ADDR_W   DS1307_ADDR<<1  //Р°РґСЂРµСЃ РјРёРєСЂРѕСЃС…РµРјС‹ DS1307 + Р±РёС‚ Р·Р°РїРёСЃРё
 #define for_me(x)  ((x>> 4)*10)+(0b00001111&x)
 #define for_ds(x) ((x/10)<<4)|(x%10)
 unsigned char ack=0;
@@ -24,7 +24,7 @@ struct TIME {
 	unsigned char year;
 	};
 
-/*Условие старта I2C*/
+/*РЈСЃР»РѕРІРёРµ СЃС‚Р°СЂС‚Р° I2C*/
 void start_cond (void)
 {
 	PORT=_BV(SDA)|_BV(SCL);
@@ -33,7 +33,7 @@ void start_cond (void)
 	asm("nop");
 	PORT&=~_BV(SCL);
 } 
-/*Условие стопа I2C*/
+/*РЈСЃР»РѕРІРёРµ СЃС‚РѕРїР° I2C*/
 void stop_cond (void)	{
 	PORT=_BV(SCL);
 	asm("nop");
@@ -41,7 +41,7 @@ void stop_cond (void)	{
 	asm("nop");
 	PORT|=_BV(SDA);
 }
-/*Послать байт по I2C*/
+/*РџРѕСЃР»Р°С‚СЊ Р±Р°Р№С‚ РїРѕ I2C*/
 void send_byte (unsigned char data)	{
 	unsigned char i;
 	for (i=0;i<8;i++)
@@ -66,7 +66,7 @@ void send_byte (unsigned char data)	{
 	PORTB&=~_BV(SDA);
 	DDRB|=_BV(SDA);
 }
-/*Принять байт по I2C*/
+/*РџСЂРёРЅСЏС‚СЊ Р±Р°Р№С‚ РїРѕ I2C*/
 unsigned char get_byte (void)	{
 	unsigned char i, res=0;
 
@@ -93,7 +93,7 @@ unsigned char get_byte (void)	{
 
 	return res;
 }
-/*Записать данные в DS1307 по I2C*/
+/*Р—Р°РїРёСЃР°С‚СЊ РґР°РЅРЅС‹Рµ РІ DS1307 РїРѕ I2C*/
 void ds_write(char adr, char data)
 {
 	start_cond();
@@ -102,7 +102,7 @@ void ds_write(char adr, char data)
 	send_byte (data);
 	stop_cond();
 }
-/*прочитать данные с DS1307 по I2C*/
+/*РїСЂРѕС‡РёС‚Р°С‚СЊ РґР°РЅРЅС‹Рµ СЃ DS1307 РїРѕ I2C*/
 unsigned char ds_read(char adr){
 	unsigned char res;
 	start_cond();
@@ -114,17 +114,17 @@ unsigned char ds_read(char adr){
 	stop_cond();
 	return res;
 }
-/*Инициализация DS1307*/
+/*РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ DS1307*/
 void ds_init(void)	{
 	unsigned char a;
 	DDR|=(1<<SDA)|(1<<SCL); //PORB=0b00000011;
 	a=ds_read(0);
 	//a=a&0b01111111;	
-	a=a& (~(1<<7)); //запуск часов
+	a=a& (~(1<<7)); //Р·Р°РїСѓСЃРє С‡Р°СЃРѕРІ
 	ds_write(0,a);
 	a=ds_read(2);
 	//a=a&0b10111111;
-	a=a& (~(1<<6));// 24 формат
+	a=a& (~(1<<6));// 24 С„РѕСЂРјР°С‚
 	ds_write(2,a);
 }
 void read_ds_data(struct TIME* a){
